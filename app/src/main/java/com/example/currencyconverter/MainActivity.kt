@@ -29,10 +29,16 @@ class MainActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                val response = api.getCurrencies()
-                val data = response.body()
+                val currenciesRes = api.getCurrencies(BuildConfig.API_KEY)
+                val data = currenciesRes.body()
 
-                Log.i("MainActivity API res", data?.currencies?.values?.find { it.code == "EUR" }!!.description)
+                val currFrom = data?.currencies?.values?.find { it.code == "EUR" }!!.code
+                val currTo = data?.currencies?.values?.find { it.code == "SAR" }!!.code
+
+                val rateRes = api.convert(currFrom, currTo, 5.0, BuildConfig.API_KEY)
+                val rateData = rateRes.body()
+
+                Log.i("MainActivity API res", rateData.toString())
             }
         }
     }
