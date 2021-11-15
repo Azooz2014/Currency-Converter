@@ -1,13 +1,11 @@
 package com.example.currencyconverter.data.Network
 
-import com.example.currencyconverter.data.CurrencyData
+import com.example.currencyconverter.data.model.CurrencyData
 import com.example.currencyconverter.data.Rate
-import com.google.gson.annotations.SerializedName
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
-interface ApiService {
+interface WebService {
 
     @Headers("x-rapidapi-host: exchange-rate9.p.rapidapi.com")
     @GET("convert")
@@ -19,4 +17,6 @@ interface ApiService {
     @Headers("x-rapidapi-host: exchange-rate9.p.rapidapi.com")
     @GET("symbols")
     suspend fun getCurrencies(@Header("x-rapidapi-key") apiKey: String): Response<CurrencyData>
+
+    //TODO: add getLatestRates function.
 }
