@@ -3,15 +3,11 @@ package com.example.currencyconverter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.example.currencyconverter.data.Network.ApiService
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
+import com.example.currencyconverter.data.Network.WebService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
-import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -25,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val api = retrofit.create(ApiService::class.java)
+        val api = retrofit.create(WebService::class.java)
 
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
@@ -35,10 +31,12 @@ class MainActivity : AppCompatActivity() {
                 val currFrom = data?.currencies?.values?.find { it.code == "EUR" }!!.code
                 val currTo = data?.currencies?.values?.find { it.code == "SAR" }!!.code
 
-                val rateRes = api.convert(currFrom, currTo, 5.0, BuildConfig.API_KEY)
+                val rateRes = api.getLatestRates(BuildConfig.API_KEY)
                 val rateData = rateRes.body()
 
-                Log.i("MainActivity API res", rateData.toString())
+                Log.i("MainActivity API res",
+                    rateData?.rates?.forEach{ println("Key: ${it.key} value: ${it.value}")}.toString()
+                )
             }
         }
     }
