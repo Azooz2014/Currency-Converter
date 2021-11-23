@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.currencyconverter.data.model.Currency
+import com.example.currencyconverter.data.Model.Currency
 
 /*
 *  Thanks to https://github.com/nicoqueijo/Android-Currency-Converter/blob/master/app/src/main/java/com/nicoqueijo/android/currencyconverter/kotlin/data/CurrencyDatabase.kt*/

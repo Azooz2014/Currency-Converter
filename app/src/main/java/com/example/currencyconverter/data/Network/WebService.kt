@@ -1,8 +1,8 @@
 package com.example.currencyconverter.data.Network
 
-import com.example.currencyconverter.data.model.CurrencyData
-import com.example.currencyconverter.data.model.Convert
-import com.example.currencyconverter.data.model.ExchangeRate
+import com.example.currencyconverter.data.Model.CurrencyData
+import com.example.currencyconverter.data.Model.Convert
+import com.example.currencyconverter.data.Model.ExchangeRate
 import retrofit2.Response
 import retrofit2.http.*
 

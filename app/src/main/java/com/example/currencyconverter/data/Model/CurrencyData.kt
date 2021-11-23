@@ -1,4 +1,4 @@
-package com.example.currencyconverter.data.model
+package com.example.currencyconverter.data.Model
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,7 +1,7 @@
 package com.example.currencyconverter.data.Local
 
 import androidx.room.*
-import com.example.currencyconverter.data.model.Currency
+import com.example.currencyconverter.data.Model.Currency
 
 /*
 *  Thanks to https://github.com/nicoqueijo/Android-Currency-Converter/blob/master/app/src/main/java/com/nicoqueijo/android/currencyconverter/kotlin/data/CurrencyDao.kt*/
