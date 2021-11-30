@@ -21,14 +21,8 @@ class DefaultRepository(private val context: Context) : Repository {
         webService = RetrofitService.exchangeRateApi
     }
 
-    override suspend fun insertCurrency(currency: Currency) = dao.insertCurrency(currency)
-
     override suspend fun insertCurrencies(currencies: List<Currency>) =
         dao.insertCurrencies(currencies)
-
-    override suspend fun updateRate(currencyCode: String, rate: Double) {
-        TODO("Not yet implemented")
-    }
 
     override suspend fun updateRates(currencies: List<Currency>) = dao.updateRates(currencies)
 
@@ -41,31 +35,34 @@ class DefaultRepository(private val context: Context) : Repository {
         isDataOld: Boolean
     ) {
 
-        //TODO: Optimize this code...
-        if (context.isNetworkAvailable() && isFirstLaunched) {
-
-            val currencies = webService.getLatestRates(BuildConfig.API_KEY).body()?.rates?.map {
-                val currencyDescription =
-                    webService.getCurrencies(BuildConfig.API_KEY).body()?.currencies?.getValue(
-                        it.key
-                    )?.description ?: ""
-                Currency(currencyCode = it.key, description = currencyDescription, it.value)
-            }
-            if (currencies != null) {
-                insertCurrencies(currencies)
+        if (context.isNetworkAvailable()) {
+            if (isFirstLaunched) {
+                currencies()?.let { insertCurrencies(it) }
                 isFirstLaunched = false
+                return
             }
-        } else if (context.isNetworkAvailable() && (forceUpdate || isDataOld)) {
-            val currencies = webService.getLatestRates(BuildConfig.API_KEY).body()?.rates?.map {
-                val currencyDescription =
-                    webService.getCurrencies(BuildConfig.API_KEY).body()?.currencies?.getValue(
-                        it.key
-                    )?.description ?: ""
-                Currency(currencyCode = it.key, description = currencyDescription, it.value)
+            if (isDataOld || forceUpdate) {
+                currencies()?.let { updateRates(it) }
+                return
+            } else {
+                getCurrencies()
+                return
             }
-            if (currencies != null) {
-                updateRates(currencies)
-            }
-        } else return
+        } else {
+            //TODO: Find away to pass error massage to presenter
+            return
+        }
+    }
+
+    private suspend fun currencies(): List<Currency>? {
+        val currencies = webService.getLatestRates(BuildConfig.API_KEY).body()?.rates?.map {
+            val currencyDescription =
+                webService.getCurrencies(BuildConfig.API_KEY).body()?.currencies?.getValue(
+                    it.key
+                )?.description ?: ""
+
+            Currency(currencyCode = it.key, description = currencyDescription, it.value)
+        }
+        return currencies
     }
 }
